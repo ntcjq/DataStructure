@@ -45,6 +45,7 @@ public class Bst2<E extends Comparable> {
     }
     private Node add(Node node,E e) {
         if(node == null){
+            size++;
             return new Node(e);
         }
         if(e.compareTo(node.e) < 0){
@@ -158,7 +159,7 @@ public class Bst2<E extends Comparable> {
         if(root == null){
             return;
         }
-        Queue<Node> queue = new LinkedBlockingQueue<>();
+        Queue<Node> queue = new LinkedList<>();
         queue.add(root);
         while(!queue.isEmpty()){
             Node node = queue.poll();
@@ -173,8 +174,89 @@ public class Bst2<E extends Comparable> {
     }
 
 
+    /**
+     * 删除最小元素
+     * @return
+     */
+    public void removeMin(){
+        if(size ==0){
+            throw new NullPointerException("二分搜索树为空");
+        }
+        removeMin(null,root);
+    }
+
+    private void removeMin(Node parent,Node node){
+        if(node.left == null){
+            if(parent == null){
+                root = root.right;
+            }else if(parent.left.right == null){
+                parent.left = null;
+            }else {
+                parent.left = parent.left.right;
+            }
+            size--;
+            return;
+        }
+        removeMin(node,node.left);
+    }
+
+    /**
+     * 删除最大元素
+     * @return
+     */
+    public void removeMax(){
+        if(size ==0){
+            throw new NullPointerException("二分搜索树为空");
+        }
+        removeMax(null,root);
+    }
+
+    private void removeMax(Node parent,Node node){
+        if(node.right == null){
+            if(parent == null){
+                root = root.left;
+            }else if(parent.right.left == null){
+                parent.right = null;
+            }else {
+                parent.right = parent.right.left;
+            }
+            size--;
+            return;
+        }
+        removeMax(node,node.right);
+    }
 
 
+    public void printTree(){
+        Queue<Node> queue = new LinkedList();
+        Node last = null;
+        Node nlast = null;
+        if(root == null){
+            return;
+        }
+        queue.add(root);
+        last = root;
+        while(!queue.isEmpty()){
+            Node node = queue.poll();
+            if(null != node.left){
+                queue.add(node.left);
+                nlast = node.left;
+            }
+
+            if(null != node.right){
+                queue.add(node.right);
+                nlast = node.right;
+            }
+            System.out.print(node.e+",");
+            if(node.equals(last)){
+                System.out.print("\n");
+                last = nlast;
+            }else{
+                continue;
+            }
+        }
+
+    }
 
     @Override
     public String toString(){
@@ -182,7 +264,6 @@ public class Bst2<E extends Comparable> {
         generateBSTString(root, 0, res);
         return res.toString();
     }
-
     /**
      * 生成以node为根节点，深度为depth的描述二叉树的字符串
      */

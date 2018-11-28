@@ -35,6 +35,7 @@ public class Bst<E extends Comparable> {
 
     public void add(E e){
         if(root == null){
+            size++;
             root = new Node(e);
         }else{
             add(root,e);
@@ -45,9 +46,11 @@ public class Bst<E extends Comparable> {
             return;
         } else if (e.compareTo(node.e) < 0 && node.left == null) {
             node.left = new Node(e);
+            size++;
             return;
         } else if (e.compareTo(node.e) > 0 && node.right == null) {
             node.right = new Node(e);
+            size++;
             return;
         }
 
